@@ -6,7 +6,7 @@ use std::path::Path;
 
 #[allow(dead_code)]
 pub fn solve() {
-  let path = Path::new("./src/day01/problem1/input.txt");
+  let path = Path::new("./src/day01/problem2/input.txt");
 
   let display = path.display();
 
