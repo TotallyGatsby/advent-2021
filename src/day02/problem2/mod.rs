@@ -5,7 +5,7 @@ use std::path::Path;
 
 #[allow(dead_code)]
 pub fn solve() {
-  let path = Path::new("./src/day02/problem1/input.txt");
+  let path = Path::new("./src/day02/problem2/input.txt");
 
   let display = path.display();
 
@@ -19,6 +19,7 @@ pub fn solve() {
   let lines = file_reader.lines();
   let mut horizontal = 0;
   let mut depth = 0;
+  let mut aim = 0;
   for line in lines {
     if let Ok(instruction) = line {
       let split = instruction.split(' ');
@@ -29,10 +30,11 @@ pub fn solve() {
 
       if dir == "forward" {
         horizontal += amount;
+        depth += aim * amount;
       } else if dir == "down" {
-        depth += amount;
+        aim += amount;
       } else if dir == "up" {
-        depth -= amount;
+        aim -= amount;
       }
     }
   }
