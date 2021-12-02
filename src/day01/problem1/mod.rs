@@ -1,22 +1,8 @@
-use std::fs::File;
-use std::io::prelude::*;
-use std::io::BufReader;
-use std::path::Path;
+use crate::util::get_lines;
 
 #[allow(dead_code)]
 pub fn solve() {
-  let path = Path::new("./src/day01/problem1/input.txt");
-
-  let display = path.display();
-
-  let file = match File::open(&path) {
-    Err(why) => panic!("couldn't open {}: {}", display, why),
-    Ok(file) => file,
-  };
-
-  let file_reader = BufReader::new(file);
-
-  let lines = file_reader.lines();
+  let lines = get_lines(input_path: &str)("./src/day01/problem/input.txt");
 
   let mut previous_depth = -1;
   let mut depth_increases = 0;
