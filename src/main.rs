@@ -3,5 +3,5 @@ mod util;
 
 fn main() {
   println!("Hello, world!");
-  day03::problem1::solve();
+  day03::problem2::solve();
 }

@@ -1,9 +1,8 @@
 use std::fs::File;
-use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::Path;
 
-pub fn get_lines(input_path: &str) -> std::io::Lines<std::io::BufReader<std::fs::File>> {
+pub fn get_file_reader(input_path: &str) -> std::io::BufReader<std::fs::File> {
   let path = Path::new(input_path);
 
   let display = path.display();
@@ -15,5 +14,5 @@ pub fn get_lines(input_path: &str) -> std::io::Lines<std::io::BufReader<std::fs:
 
   let file_reader = BufReader::new(file);
 
-  return file_reader.lines();
+  return file_reader;
 }

@@ -1,4 +1,5 @@
-use crate::util::get_lines;
+use crate::util::get_file_reader;
+use std::io::BufRead;
 
 fn initialize_vector(sums: &mut Vec<i16>, count: usize) {
   for _ in 0..count {
@@ -20,8 +21,8 @@ fn vec_2_dec(vals: &Vec<i8>) -> i32 {
 
 #[allow(dead_code)]
 pub fn solve() {
-  let lines = get_lines("./src/day03/problem1/input.txt");
-
+  let file_reader = get_file_reader("./src/day03/problem1/input.txt");
+  let lines = file_reader.lines();
   let mut sums: Vec<i16> = Vec::new();
 
   let mut processed_count = 0;
