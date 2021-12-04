@@ -34,8 +34,10 @@ fn binstr_2_dec(binstr: &String) -> i32 {
 #[allow(dead_code)]
 pub fn solve() {
   let file_reader = get_file_reader("./src/day03/problem2/input.txt");
+
+  // Get our input and sort it, so we can use two pointers to 'zero in' on our target
   let mut lines: Vec<String> = file_reader.lines().collect::<Result<_, _>>().unwrap();
-  lines.sort_unstable();
+  lines.sort_unstable(); // unstable sort is ok, equivalent values can be in any order
 
   // Loop variables
   let string_len = lines[0].len();
