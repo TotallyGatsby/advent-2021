@@ -4,9 +4,8 @@ use std::io::BufRead;
 mod grid;
 mod lines;
 
-#[allow(dead_code)]
 pub fn solve() {
-  let file = get_file_reader("./src/day05/problem1/input.txt");
+  let file = get_file_reader("./src/day05/problem2/input.txt");
 
   let file_lines = file.lines();
 
@@ -17,7 +16,7 @@ pub fn solve() {
     grid.blit(span.get_sea_cells());
   }
 
-  //grid.print();
+  // grid.print();
   let peaks = grid.get_peak_count();
   println!("Peak Count: {}", peaks);
 }
