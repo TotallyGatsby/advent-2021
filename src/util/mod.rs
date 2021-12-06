@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 
+#[allow(dead_code)]
 pub fn get_file_reader(input_path: &str) -> std::io::BufReader<std::fs::File> {
   let path = Path::new(input_path);
 
