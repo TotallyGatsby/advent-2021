@@ -7,7 +7,6 @@ pub fn solve() {
     .split('\n')
     .collect::<Vec<_>>();
 
-  println!("Lines: {:?}", lines);
   let grid = grid::SeaGrid::new(lines);
 
   println!("Total Risk: {}", grid.get_risk());

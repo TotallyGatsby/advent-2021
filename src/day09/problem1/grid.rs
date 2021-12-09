@@ -16,7 +16,6 @@ impl SeaGrid {
     }
     grid.cells.pop();
 
-    grid.print();
     return grid;
   }
 
@@ -44,16 +43,17 @@ impl SeaGrid {
     for (y, cells) in self.cells.iter().enumerate() {
       for (x, height) in cells.iter().enumerate() {
         let mut is_low_point = true;
+
         if x > 0 {
-          is_low_point &= self.get_cell_height(x - 1, y) >= *height;
+          is_low_point &= self.get_cell_height(x - 1, y) > *height;
         }
 
         if y > 0 {
-          is_low_point &= self.get_cell_height(x, y - 1) >= *height;
+          is_low_point &= self.get_cell_height(x, y - 1) > *height;
         }
 
-        is_low_point &= self.get_cell_height(x + 1, y) >= *height;
-        is_low_point &= self.get_cell_height(x, y + 1) >= *height;
+        is_low_point &= self.get_cell_height(x + 1, y) > *height;
+        is_low_point &= self.get_cell_height(x, y + 1) > *height;
 
         if is_low_point {
           risk += height + 1;
