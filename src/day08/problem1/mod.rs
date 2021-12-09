@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn solve() {
   let messages = include_str!("input.txt").split('\n').collect::<Vec<_>>();
 
