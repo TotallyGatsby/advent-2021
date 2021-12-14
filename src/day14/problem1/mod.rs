@@ -7,9 +7,9 @@ pub fn solve() {
     .split('\n')
     .collect::<Vec<_>>();
 
-  let mut polymer = lines[0].to_string();
+  let polymer = lines[0].to_string();
 
-  let mut rules: HashMap<String, String> = HashMap::new();
+  let mut rules = HashMap::new();
 
   for rule in lines.iter().skip(2) {
     let rule_pieces = rule.split("->").collect::<Vec<_>>();
@@ -19,28 +19,47 @@ pub fn solve() {
     );
   }
 
-  println!("Polymer: {}", polymer);
-  for i in 0..10 {
-    println!("Inserting, Step {}", i + 1);
-    polymer = polymer.chars().collect::<Vec<_>>().windows(2).fold(
-      polymer.chars().nth(0).unwrap().to_string(),
-      |result, pair| {
-        let lookup: String = pair.iter().collect();
-        let insert_char = &rules[&lookup];
+  let mut bigrams: HashMap<String, usize> = HashMap::new();
 
-        result + &insert_char + &pair[1].to_string()
-      },
-    );
+  for rule in rules.keys() {
+    bigrams.insert(rule.to_string(), 0);
+  }
+
+  for gram in polymer.chars().collect::<Vec<_>>().windows(2) {
+    *bigrams
+      .entry(gram.iter().collect::<String>())
+      .or_insert(0usize) += 1;
+  }
+
+  println!("Bigrams: {:?}", bigrams);
+  for i in 0..40 {
+    println!("Iterating Step {}", i + 1);
+
+    let mut new_values = HashMap::new();
+    for rule in &rules {
+      *new_values
+        .entry(rule.0.chars().nth(0).unwrap().to_string() + &rule.1.to_string())
+        .or_insert(0usize) += *bigrams.entry(rule.0.to_string()).or_insert(0usize);
+      *new_values
+        .entry(rule.1.to_string() + &rule.0.chars().nth(1).unwrap().to_string())
+        .or_insert(0usize) += *bigrams.entry(rule.0.to_string()).or_insert(0usize);
+    }
+    bigrams = new_values;
   }
 
   let mut counts = HashMap::new();
-  for cha in polymer.chars() {
-    *counts.entry(cha).or_insert(0usize) += 1;
+  for bigram in bigrams {
+    *counts
+      .entry(bigram.0.chars().nth(0).unwrap())
+      .or_insert(0usize) += bigram.1;
   }
+
+  *counts
+    .entry(polymer.chars().last().unwrap())
+    .or_insert(0usize) += 1;
 
   let mut values = counts.values().collect::<Vec<_>>();
   values.sort_unstable();
 
-  println!("Values: {:?}", values);
   println!("Answer: {}", *values.last().unwrap() - values[0]);
 }
