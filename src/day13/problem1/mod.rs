@@ -37,16 +37,4 @@ pub fn solve() {
   }
 
   fold_grid.print();
-  /*
-  fold_grid.print();
-
-  fold_grid.fold('y', 7);
-
-  println!("Folded:");
-  fold_grid.print();
-  fold_grid.fold('x', 5);
-
-  println!("Folded:");
-  fold_grid.print();
-  */
 }
