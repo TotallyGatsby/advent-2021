@@ -3,6 +3,13 @@ type BitSlice<'a> = &'a bitvec::slice::BitSlice<bitvec::order::Msb0, u8>;
 #[derive(Clone, Debug, PartialEq)]
 enum PacketType {
   Literal,
+  Sum,
+  Product,
+  Minimum,
+  Maximum,
+  Greater,
+  Less,
+  Equal,
   Operator,
 }
 
@@ -11,6 +18,7 @@ pub struct Packet {
   version: u8,
   msg_type: PacketType,
   children: Vec<Packet>,
+  literal: usize,
 }
 
 impl Packet {
@@ -31,17 +39,31 @@ impl Packet {
     let msg_type;
     if msg_type_val == 4 {
       msg_type = PacketType::Literal;
+    } else if msg_type_val == 0 {
+      msg_type = PacketType::Sum;
+    } else if msg_type_val == 1 {
+      msg_type = PacketType::Product;
+    } else if msg_type_val == 2 {
+      msg_type = PacketType::Minimum;
+    } else if msg_type_val == 3 {
+      msg_type = PacketType::Maximum;
+    } else if msg_type_val == 5 {
+      msg_type = PacketType::Greater;
+    } else if msg_type_val == 6 {
+      msg_type = PacketType::Less;
+    } else if msg_type_val == 7 {
+      msg_type = PacketType::Equal;
     } else {
       msg_type = PacketType::Operator;
     }
     println!("Msg Type: {:?}", msg_type);
 
     let mut children = Vec::new();
-
+    let mut literal = 0;
     if msg_type == PacketType::Literal {
-      let literal = decode_literal(input);
+      literal = decode_literal(input);
       println!("Literal: {}", literal);
-    } else if msg_type == PacketType::Operator {
+    } else {
       children = Self::parse_subpackets(input);
     }
 
@@ -49,6 +71,7 @@ impl Packet {
       version,
       msg_type,
       children,
+      literal,
     }
   }
 
@@ -91,6 +114,62 @@ impl Packet {
       sum += child.get_version_sum();
     }
     sum
+  }
+
+  pub fn parse_packet(&self) -> usize {
+    if self.msg_type == PacketType::Literal {
+      self.literal
+    } else if self.msg_type == PacketType::Sum {
+      let mut tmp_sum = 0;
+      for child in &self.children {
+        tmp_sum += child.parse_packet();
+      }
+      tmp_sum
+    } else if self.msg_type == PacketType::Product {
+      let mut tmp_sum = 1;
+      for child in &self.children {
+        tmp_sum *= child.parse_packet();
+      }
+      tmp_sum
+    } else if self.msg_type == PacketType::Minimum {
+      let mut min = 99999999999999;
+      for child in &self.children {
+        let parse = child.parse_packet();
+        if parse < min {
+          min = parse;
+        }
+      }
+      min
+    } else if self.msg_type == PacketType::Maximum {
+      let mut max = 0;
+      for child in &self.children {
+        let parse = child.parse_packet();
+        if parse > max {
+          max = parse;
+        }
+      }
+      max
+    } else if self.msg_type == PacketType::Greater {
+      if self.children[0].parse_packet() > self.children[1].parse_packet() {
+        1
+      } else {
+        0
+      }
+    } else if self.msg_type == PacketType::Less {
+      if self.children[0].parse_packet() < self.children[1].parse_packet() {
+        1
+      } else {
+        0
+      }
+    } else if self.msg_type == PacketType::Equal {
+      if self.children[0].parse_packet() == self.children[1].parse_packet() {
+        1
+      } else {
+        0
+      }
+    } else {
+      0
+    }
   }
 }
 

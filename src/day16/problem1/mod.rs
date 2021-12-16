@@ -8,4 +8,5 @@ pub fn solve() {
 
   println!("Final Packet: {:?}", my_packet);
   println!("Version Sum: {}", my_packet.get_version_sum());
+  println!("Parsed: {}", my_packet.parse_packet());
 }
